@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Due Diligence | LV Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary-navy: #0B1B2B;
+  --accent-cyan: #00B4D8;
+  --accent-blue: #0077B6;
+  --bg-page: #F4F7F9;
+  --card-bg: #FFFFFF;
+  --input-bg: #FFFFFF;
+  --text-dark: #1A252C;
+  --text-muted: #5A6E7F;
+  --border-line: #D0DCE5;
+  --err: #D90429;
+  --ok: #2A9D8F;
+}
+
+*{box-sizing:border-box}
+html{scroll-padding-top:16px}
+body{
+  margin:0;
+  background:var(--bg-page);
+  color:var(--text-dark);
+  font:16px/1.6 "Source Sans 3", system-ui, -apple-system, sans-serif;
+  padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)
+}
+
+h1,h2,h3,legend,.brand,.tab b{
+  font-family:"Roboto", sans-serif;
+  line-height:1.2;
+}
+
+.wrap{max-width:800px;margin:0 auto;padding:32px 20px 80px}
+
+header{
+  text-align:center;
+  background: linear-gradient(135deg, #07121E 0%, #0B1B2B 100%);
+  padding:36px 24px;
+  border-radius:16px;
+  color:#FFFFFF;
+  box-shadow: 0 10px 30px rgba(11, 27, 43, 0.15);
+  margin-bottom:24px;
+}
+
+header img.logo {
+  max-width: 120px;
+  height: auto;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-cyan);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+header h1{
+  font-size:clamp(24px, 5vw, 32px);
+  font-weight: 700;
+  color: #FFFFFF;
+  margin:0 0 8px 0;
+}
+
+header p{
+  color: #B0C4DE;
+  font-size: 15px;
+  margin: 0 auto;
+  max-width: 58ch;
+}
+
+.tabs{display:flex;gap:12px;margin:24px 0 12px}
+.tab{
+  flex:1;
+  text-align:left;
+  background:var(--card-bg);
+  border:2px solid var(--border-line);
+  border-radius:12px;
+  padding:14px 16px;
+  color:var(--text-dark);
+  font:inherit;
+  cursor:pointer;
+  transition: all 0.2s ease;
+}
+.tab b{display:block;font-size:16px;color:var(--primary-navy)}
+.tab small{color:var(--text-muted);font-size:13px}
+.tab[aria-selected=true]{
+  border-color:var(--accent-cyan);
+  background: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(0, 180, 216, 0.15);
+}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0);z-index:5;background:var(--bg-page);padding:8px 0 16px}
+.bar div{height:8px;background:var(--border-line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));transition:width .3s}
+.bar span{font-size:13px;color:var(--text-muted);margin-top:4px;display:block}
+
+fieldset{border:0;margin:0 0 28px;padding:0}
+legend{
+  font-size:20px;
+  font-weight:700;
+  padding:0;
+  margin:24px 0 12px;
+  color:var(--primary-navy);
+  border-bottom: 2px solid var(--accent-cyan);
+  padding-bottom: 4px;
+}
+
+.q{
+  background:var(--card-bg);
+  border:1px solid var(--border-line);
+  border-radius:12px;
+  padding:18px 20px;
+  margin:0 0 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+}
+.q>label,.q>.l{display:block;font-weight:600;margin-bottom:8px;color:var(--primary-navy)}
+.q .h{font-weight:400;color:var(--text-muted);font-size:14px;display:block;margin-top:2px}
+.req::after{content:" *";color:var(--err)}
+
+input[type=text],input[type=email],input[type=tel],select,textarea{
+  width:100%;
+  font:inherit;
+  color:var(--text-dark);
+  background:var(--input-bg);
+  border:1.5px solid var(--border-line);
+  border-radius:8px;
+  padding:12px 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus,select:focus,textarea:focus{
+  outline:none;
+  border-color:var(--accent-cyan);
+  box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.2);
+}
+
+textarea{min-height:90px;resize:vertical}
+
+.opts{display:grid;gap:8px;margin-top:6px}
+.opts label{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  font-weight:400;
+  padding:8px 10px;
+  border-radius:8px;
+  background: #FFFFFF;
+  border: 1px solid #EAEFEF;
+  cursor:pointer;
+  transition: background 0.15s ease;
+}
+.opts label:hover{background:#F8FAFC}
+.opts input{margin-top:4px;accent-color:var(--accent-blue)}
+
+.q.bad{border-color:var(--err)}
+.msg{color:var(--err);font-size:13px;display:none;margin-top:6px}
+.q.bad .msg{display:block}
+
+.lgpd{border-left:5px solid var(--accent-cyan)}
+
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+button.p,button.s{
+  font:500 16px "Roboto", sans-serif;
+  padding:14px 28px;
+  border-radius:8px;
+  cursor:pointer;
+  transition: all 0.2s ease;
+}
+button.p{
+  background:linear-gradient(135deg, var(--accent-blue), #005F8D);
+  color:#FFFFFF;
+  border:none;
+  box-shadow: 0 4px 12px rgba(0, 119, 182, 0.25);
+}
+button.p:hover{
+  background:linear-gradient(135deg, #0088C6, var(--accent-blue));
+  transform: translateY(-1px);
+}
+button.s{
+  background:transparent;
+  color:var(--primary-navy);
+  border:1.5px solid var(--border-line);
+}
+button.s:hover{
+  background:#FFFFFF;
+  border-color:var(--primary-navy);
+}
+button:disabled{opacity:.6;cursor:wait}
+
+.res{margin-top:20px;padding:16px;border-radius:10px;display:none}
+.res.ok{display:block;background:#FFFFFF;border:2px solid var(--ok);color:var(--ok)}
+.res.er{display:block;background:#FFFFFF;border:2px solid var(--err);color:var(--err)}
+
+footer{
+  color:var(--text-muted);
+  font-size:13px;
+  margin-top:40px;
+  text-align:center;
+  border-top:1px solid var(--border-line);
+  padding-top:20px;
+}
+.hp{position:absolute;left:-9999px}
+@media(max-width:520px){.tabs{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <!-- LOGOTIPO LOCAL CORRIGIDO -->
+  <img src="logo.png" alt="LV Hub Logo" class="logo">
+  <h1>Relatório Integrado de Due Diligence</h1>
+  <p>Diagnóstico Estratégico & Estruturação de Negócios em Saúde. Estas informações direcionam o desenho da proposta institucional sob medida para sua clínica.</p>
+</header>
+
+<div class="tabs" role="tablist">
+<button class="tab" role="tab" id="t1" aria-selected="true" data-f="inicial"><b>Etapa 1: Início de Parceria</b><small>Diagnóstico geral (aprox. 8 min)</small></button>
+<button class="tab" role="tab" id="t2" aria-selected="false" data-f="aprofundamento"><b>Etapa 2: Aprofundamento</b><small>Análise detalhada (aprox. 20 min)</small></button>
+</div>
+
+<div class="bar" aria-hidden="true"><div><i id="pg"></i></div><span id="pt"></span></div>
+
+<form id="form" novalidate autocomplete="off">
+<input class="hp" type="text" name="_gotcha" tabindex="-1" aria-hidden="true">
+<div id="fields"></div>
+
+<div class="q lgpd" id="lgpdq">
+  <div class="l req">Termo de Consentimento & Conformidade (LGPD)</div>
+  <div class="opts">
+    <label>
+      <input type="checkbox" id="lgpd"> 
+      <span>Autorizo a LV Hub a utilizar as informações deste diagnóstico exclusivamente para avaliação estratégica, governança e elaboração de propostas comerciais. Declaro que não foram informados dados pessoais sensíveis de pacientes.</span>
+    </label>
+  </div>
+  <div class="msg">Marque o consentimento para prosseguir com o envio.</div>
+</div>
+
+<div class="btns">
+  <button type="submit" class="p" id="send">Enviar Diagnóstico</button>
+  <button type="button" class="s" id="dl">Baixar Cópia em Texto</button>
+</div>
+<div class="res" id="res" role="status" aria-live="polite"></div>
+</form>
+
+<footer>
+  LV Hub · Diagnóstico e Estruturação de Negócios em Saúde · Documento Confidencial.<br>
+  Suas respostas ficam salvas neste dispositivo até o envio oficial.
+</footer>
+</div>
+
+<script>
+/* ============ CONFIGURAÇÃO ============ */
+const CONFIG = {
+  endpoint: "https://formsubmit.co/ajax/lvgestaoestrategicasp@gmail.com",
+  emailDestino: "lvgestaoestrategicasp@gmail.com",
+  assuntoPrefixo: "Due Diligence LV Hub"
+};
+
+/* ============ ESTRUTURA DO FORMULÁRIO ============ */
+const T="text",A="area",R="radio",C="check",S="select";
+const FORMS={
+inicial:[
+{t:"1. Dados da Instituição & Responsáveis",q:[
+ {id:"clinica",l:"Razão Social / Nome Fantasia e CNPJ",ty:T,req:1},
+ {id:"resp",l:"Nome do(a) Responsável e Cargo/Papel na Gestão",ty:T,req:1},
+ {id:"email",l:"E-mail Corporativo para Contato",ty:"email",req:1},
+ {id:"fone",l:"Telefone / WhatsApp com DDD",ty:"tel",req:1},
+ {id:"local",l:"Endereço, Bairro e Cidade",ty:T},
+ {id:"fase",l:"Estágio Atual de Operação da Clínica",ty:R,req:1,o:["Ainda não inaugurou (Fase de projeto)","Em operação há menos de 6 meses","Em operação de 6 a 12 meses","Em operação há mais de 1 ano"]},
+ {id:"pacientes",l:"Volume Mensal Aproximado de Pacientes Ativos",ty:S,o:["Ainda não atende","1 a 20 pacientes","21 a 50 pacientes","51 a 100 pacientes","Acima de 100 pacientes"]},
+ {id:"origem",l:"Como conheceu a LV Hub?",ty:T}]},
+
+{t:"2. Especialidades, Métodos & Conformidade",q:[
+ {id:"esp",l:"Especialidades Ativas ou Previstas no Quadro Clínico",ty:C,o:["Fonoaudiologia","Terapia Ocupacional","Psicologia / ABA","Fisioterapia Neurofuncional","Psicopedagogia","Musicoterapia","Nutrição","Outra"]},
+ {id:"dif",l:"Diferenciais Técnicos e Certificações da Equipe",h:"Ex.: PROMPT, Bobath, Integração Sensorial de Ayres®, CAA, etc.",ty:A},
+ {id:"docs",l:"Status da Documentação Regulatória Institucional",ty:C,o:["CNPJ Ativo com CNAE de Saúde","Contrato Social Regularizado","Alvará de Funcionamento Municipal","Licença Sanitária (Vigilância)","CNES Ativo","Registro PJ nos Conselhos de Classe (CRFa, CREFITO, CRP)","AVCB / CLCB (Bombeiros)","PGRSS (Plano de Resíduos)","Em fase de obtenção / orientação"]},
+ {id:"rt",l:"Responsáveis Técnicos (RT) Definidos por Área",ty:R,o:["Sim, em todas as especialidades","Parcialmente definidos","Não definidos até o momento","Necessita de orientação"]}]},
+
+{t:"3. Credenciamento & Gestão Operacional",q:[
+ {id:"cred",l:"Situação Atual referente a Planos de Saúde",ty:R,req:1,o:["Nenhum credenciamento ativo","Protocolos de credenciamento em andamento","Credenciada em operadoras","Apenas atendimento particular / reembolso"]},
+ {id:"ops",l:"Operadoras de Saúde de Maior Interesse na Região",ty:C,o:["SulAmérica","Porto Seguro","Bradesco Saúde","Amil","Hapvida","NotreDame Intermédica","Unimed Nacional","Outras"]},
+ {id:"caixa",l:"Capacidade de Sustentação do Fluxo de Caixa (Prazos de 60 a 90 dias)",ty:R,o:["Estruturado para suportar","Parcialmente estruturado","Necessita de planejamento financeiro","Não informado"]},
+ {id:"sist",l:"Ferramentas de Gestão e Prontuário Eletrônico em Uso",ty:R,o:["Nenhum (Uso de planilhas e papel)","Ferramentas de Nuvem Genéricas (Google Drive, WhatsApp)","Software Clínico Contratado","Em busca de um sistema especializado (ex: Meeting Dream)"]}]},
+
+{t:"4. Visão de Negócio & Objetivos",q:[
+ {id:"desafios",l:"Quais os 3 principais desafios da clínica atualmente?",ty:A,req:1},
+ {id:"meta",l:"Onde pretendem que a clínica esteja estruturada em 12 meses?",ty:A,req:1},
+ {id:"prior",l:"Prioridades Estratégicas para os Próximos 90 Dias",ty:C,o:["Credenciamento com Operadoras","Implantação de Sistema e Prontuário Digital","Estruturação e Contratação de Equipe","Captação de Pacientes / Marketing","BPO de Processos e Padronização","BPO Comercial","Adequação Regulatória e LGPD"]},
+ {id:"fat",l:"Faixa de Faturamento Bruto Mensal Projetado/Atual",ty:S,o:["Fase Pré-operacional","Até R$ 20.000","R$ 20.000 a R$ 50.000","R$ 50.000 a R$ 100.000","Acima de R$ 100.000","Tratar diretamente na reunião"]}]},
+
+{t:"5. Modelo de Parceria Esperado da LV Hub",q:[
+ {id:"apoio",l:"Frentes de Atuação de Maior Interesse com a LV Hub",ty:C,o:["Credenciamento com Operadoras","BPO de Processos Operacionais","BPO Comercial","Mentoria em Gestão de Saúde","Implantação e Treinamento em Sistema","Faturamento TISS e Gestão de Glosas"]},
+ {id:"modelo",l:"Modelo de Engajamento Preferencial",ty:R,o:["Honorário Fixo Mensal","Participação em Faturamento Recorrente","Modelo Misto","Em definição / Aberto a propostas"]},
+ {id:"decide",l:"Decisores da Contratação e Prazo Estimado de Início",ty:T},
+ {id:"obs",l:"Observações ou Informações Complementares",ty:A}]}
+],
+
+aprofundamento:[
+{t:"1. Identidade e Governança Societária",q:[
+ {id:"hist",l:"Trajetória da clínica e motivação fundacional",ty:A},
+ {id:"papeis",l:"Divisão de atribuições e papéis entre os sócios",ty:A},
+ {id:"decisao",l:"Processo de tomada de decisão e resolução de divergências",ty:A},
+ {id:"tempo",l:"Dedicação horária semanal dos sócios à operação",ty:T},
+ {id:"marca",l:"Posicionamento de marca desejado frente às famílias e profissionais",ty:A}]},
+{t:"2. Planejamento & Metas de Longo Prazo",q:[
+ {id:"m3",l:"Visão de futuro para 3 anos",ty:A},
+ {id:"metafat",l:"Meta de faturamento mensal para 6 e 12 meses",ty:T},
+ {id:"cap",l:"Volume máximo de atendimentos suportado pela estrutura física atual",ty:T},
+ {id:"inv",l:"Orçamento aprovado para investimentos nos próximos 6 meses",ty:S,o:["Até R$ 10.000","R$ 10.000 a R$ 30.000","R$ 30.000 a R$ 100.000","Acima de R$ 100.000","A definir"]}]},
+{t:"3. Instalações Físicas & Conformidade Avançada",q:[
+ {id:"pend",l:"Relação de documentos pendentes ou em processo de renovação",ty:A},
+ {id:"estr",l:"Avaliação da infraestrutura física (acessibilidade, isolamento acústico, salas)",ty:A},
+ {id:"venc",l:"Gestão do calendário de licenças e vencimentos",ty:T}]},
+{t:"4. Abordagens Clínicas & Indicadores",q:[
+ {id:"fono",l:"Detalhamento Fonoaudiologia: PROMPT, Motricidade Orofacial, CAA",ty:A},
+ {id:"to",l:"Detalhamento Terapia Ocupacional: Integração Sensorial de Ayres®",ty:A},
+ {id:"fisio",l:"Detalhamento Fisioterapia: Bobath e Neurofuncional",ty:A},
+ {id:"psi",l:"Detalhamento Psicologia: Modelos de Avaliação e Supervisão ABA",ty:A},
+ {id:"disc",l:"Sistemática de Discussão Integrada de Casos Clínicos",ty:A},
+ {id:"res",l:"Protocolos de demonstração de evolução e resultados aos responsáveis",ty:A}]},
+{t:"5. Equipe, Contratação & Tecnologia",q:[
+ {id:"eq",l:"Dimensionamento do corpo clínico (Ativos vs. Em contratação)",ty:A},
+ {id:"vinc",l:"Modelos de contratação praticados",ty:C,o:["CLT","PJ","Prestador Autônomo","Sócio-terapeuta"]},
+ {id:"pront",l:"Armazenamento e segurança dos prontuários clínicos",ty:R,o:["Físico (Papel)","Nuvem Geral (Drive / Dropbox)","Sistema Clínico Dedicado","Servidor Próprio"]},
+ {id:"lgpd",l:"Políticas formais de privacidade e proteção de dados implementadas",ty:R,o:["Sim, totalmente integradas","Em processo de estruturação","Não implementadas"]}]}
+]};
+
+/* ============ LÓGICA DE RENDERIZAÇÃO ============ */
+let cur="inicial";
+const $=s=>document.querySelector(s), fields=$("#fields");
+const KEY=f=>"lvdd_"+f;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function build(f){
+  cur=f;
+  fields.innerHTML=FORMS[f].map((sec,i)=>`<fieldset><legend>${esc(sec.t)}</legend>`+sec.q.map(q=>{
+    const id=f+"_"+q.id, req=q.req?" req":"", h=q.h?`<span class="h">${esc(q.h)}</span>`:"";
+    let inp="";
+    if(q.ty===R||q.ty===C){
+      const t=q.ty===R?"radio":"checkbox";
+      inp=`<div class="opts">`+q.o.map(o=>`<label><input type="${t}" name="${id}" value="${esc(o)}"><span>${esc(o)}</span></label>`).join("")+`</div>`;
+      return `<div class="q" data-r="${q.req?1:0}"><div class="l${req}">${esc(q.l)}${h}</div>${inp}<div class="msg">Selecione uma opção para continuar.</div></div>`;
+    }
+    if(q.ty===S) inp=`<select id="${id}" name="${id}"><option value="">Selecione uma opção</option>`+q.o.map(o=>`<option>${esc(o)}</option>`).join("")+`</select>`;
+    else if(q.ty===A) inp=`<textarea id="${id}" name="${id}" placeholder="Descreva aqui..."></textarea>`;
+    else inp=`<input type="${q.ty}" id="${id}" name="${id}">`;
+    return `<div class="q" data-r="${q.req?1:0}"><label for="${id}" class="${req.trim()}">${esc(q.l)}${h}</label>${inp}<div class="msg">Preencha este campo obrigatoriamente.</div></div>`;
+  }).join("")+`</fieldset>`).join("");
+  restore(); progress();
+  document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.f===f));
+  $("#res").className="res";
+}
+
+function collect(){
+  const out={}, fd=new FormData($("#form"));
+  for(const [k,v] of fd){ if(k==="_gotcha"||!k.startsWith(cur+"_"))continue;
+    const key=k.slice(cur.length+1); out[key]=key in out?[].concat(out[key],v):v; }
+  return out;
+}
+function label(key){ for(const s of FORMS[cur]) for(const q of s.q) if(q.id===key) return q.l; return key; }
+function progress(){
+  const qs=[...fields.querySelectorAll(".q")]; let done=0;
+  qs.forEach(q=>{ const el=q.querySelectorAll("input,select,textarea");
+    if([...el].some(e=>(e.type==="radio"||e.type==="checkbox")?e.checked:e.value.trim())) done++; });
+  $("#pg").style.width=(100*done/qs.length)+"%";
+  $("#pt").textContent=done+" de "+qs.length+" itens respondidos";
+}
+function save(){ try{ localStorage.setItem(KEY(cur),JSON.stringify(collect())); }catch(e){} }
+function restore(){
+  let d={}; try{ d=JSON.parse(localStorage.getItem(KEY(cur))||"{}"); }catch(e){}
+  Object.entries(d).forEach(([k,v])=>{ const name=cur+"_"+k, vals=[].concat(v);
+    document.getElementsByName(name).forEach(el=>{
+      if(el.type==="radio"||el.type==="checkbox") el.checked=vals.includes(el.value); else el.value=vals[0]; }); });
+}
+
+function validate(){
+  let first=null;
+  fields.querySelectorAll(".q").forEach(q=>{
+    let bad=false;
+    if(q.dataset.r==="1"){ const el=[...q.querySelectorAll("input,select,textarea")];
+      bad=!el.some(e=>(e.type==="radio"||e.type==="checkbox")?e.checked:e.value.trim()); }
+    q.classList.toggle("bad",bad); if(bad&&!first) first=q; });
+  const lg=$("#lgpd").checked; $("#lgpdq").classList.toggle("bad",!lg);
+  if(!lg&&!first) first=$("#lgpdq");
+  if(first) first.scrollIntoView({behavior:"smooth",block:"center"});
+  return !first;
+}
+
+function asText(d){
+  let t=CONFIG.assuntoPrefixo+" | "+(cur==="inicial"?"Etapa 1":"Etapa 2")+"\nData de Envio: "+new Date().toLocaleString("pt-BR")+"\n\n";
+  Object.entries(d).forEach(([k,v])=>{ t+=label(k)+"\n  "+[].concat(v).join("; ")+"\n\n"; });
+  return t;
+}
+function result(msg,ok){ const r=$("#res"); r.className="res "+(ok?"ok":"er"); r.innerHTML=msg; r.scrollIntoView({behavior:"smooth",block:"center"}); }
+
+$("#form").addEventListener("input",()=>{save();progress();});
+$("#form").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const d=collect(); if(!validate()) return;
+  if(document.querySelector('[name=_gotcha]').value) return;
+  const subject=CONFIG.assuntoPrefixo+" | "+(cur==="inicial"?"Etapa 1":"Etapa 2")+" | "+(d.clinica||d.resp||"Sem identificação");
+  const body=asText(d);
+  if(CONFIG.endpoint){
+    const btn=$("#send"); btn.disabled=true; btn.textContent="Enviando Diagnóstico...";
+    try{
+      const r=await fetch(CONFIG.endpoint,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
+        body:JSON.stringify({_subject:subject,_template:"table",etapa:cur,consentimento_lgpd:"sim",respostas:body,...d})});
+      if(!r.ok) throw new Error(r.status);
+      try{ localStorage.removeItem(KEY(cur)); }catch(e){}
+      result("<b>Diagnóstico enviado com sucesso!</b> Recebemos suas respostas e nossa equipe técnica entrará em contato em breve com a proposta estratégica.",true);
+    }catch(err){
+      result("<b>Não foi possível realizar o envio automático no momento.</b> Por favor, utilize a opção <b>Baixar Cópia em Texto</b> e encaminhe o arquivo gerado para "+esc(CONFIG.emailDestino)+".",false);
+    }
+    btn.disabled=false; btn.textContent="Enviar Diagnóstico";
+  } else {
+    const url="mailto:"+CONFIG.emailDestino+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body.slice(0,1800));
+    location.href=url;
+    result("Abrimos seu gerenciador de e-mail com os dados preenchidos.",true);
+  }
+});
+
+$("#dl").addEventListener("click",()=>{
+  const d=collect(); const blob=new Blob([asText(d)],{type:"text/plain;charset=utf-8"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="due-diligence-lv-hub-"+cur+".txt"; a.click(); URL.revokeObjectURL(a.href);
+});
+
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{ save(); build(b.dataset.f); window.scrollTo({top:0,behavior:"smooth"}); }));
+build("inicial");
+</script>
+</body>
+</html>
