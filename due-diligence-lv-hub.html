@@ -194,6 +194,17 @@ button:disabled{opacity:.6;cursor:wait}
 .res.ok{display:block;background:#FFFFFF;border:2px solid var(--ok);color:var(--ok)}
 .res.er{display:block;background:#FFFFFF;border:2px solid var(--err);color:var(--err)}
 
+.locked-box {
+  background: #FFFFFF;
+  border: 2px solid var(--accent-blue);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  margin-top: 20px;
+}
+.locked-box h3 { color: var(--primary-navy); margin-bottom: 8px; }
+.locked-box p { color: var(--text-muted); margin: 0; }
+
 footer{
   color:var(--text-muted);
   font-size:13px;
@@ -209,10 +220,10 @@ footer{
 <body>
 <div class="wrap">
 <header>
-  <!-- LOGOTIPO LOCAL CORRIGIDO -->
+  <!-- IMAGEM DO LOGO DA LV HUB -->
   <img src="logo.png" alt="LV Hub Logo" class="logo">
   <h1>Relatório Integrado de Due Diligence</h1>
-  <p>Diagnóstico Estratégico & Estruturação de Negócios em Saúde. Estas informações direcionam o desenho da proposta institucional sob medida para sua clínica.</p>
+  <p>Diagnóstico Estratégico & Estruturação de Negócios em Saúde. Formulário exclusivo de avaliação para a Clínica Multidisciplinar A-MAR.</p>
 </header>
 
 <div class="tabs" role="tablist">
@@ -237,7 +248,7 @@ footer{
   <div class="msg">Marque o consentimento para prosseguir com o envio.</div>
 </div>
 
-<div class="btns">
+<div class="btns" id="btn-container">
   <button type="submit" class="p" id="send">Enviar Diagnóstico</button>
   <button type="button" class="s" id="dl">Baixar Cópia em Texto</button>
 </div>
@@ -331,7 +342,19 @@ aprofundamento:[
 let cur="inicial";
 const $=s=>document.querySelector(s), fields=$("#fields");
 const KEY=f=>"lvdd_"+f;
+const LOCK_KEY=f=>"lvdd_submitted_"+f;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function checkLock(){
+  if(localStorage.getItem(LOCK_KEY(cur))){
+    $("#btn-container").style.display="none";
+    result("<div class='locked-box'><h3>Diagnóstico Já Enviado</h3><p>As respostas desta etapa já foram enviadas com sucesso à equipe da LV Hub através deste dispositivo. Se precisar alterar alguma informação, entre em contato diretamente conosco.</p></div>", true);
+    return true;
+  } else {
+    $("#btn-container").style.display="flex";
+    return false;
+  }
+}
 
 function build(f){
   cur=f;
@@ -351,6 +374,7 @@ function build(f){
   restore(); progress();
   document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.f===f));
   $("#res").className="res";
+  checkLock();
 }
 
 function collect(){
@@ -398,6 +422,7 @@ function result(msg,ok){ const r=$("#res"); r.className="res "+(ok?"ok":"er"); r
 $("#form").addEventListener("input",()=>{save();progress();});
 $("#form").addEventListener("submit",async e=>{
   e.preventDefault();
+  if(checkLock()) return;
   const d=collect(); if(!validate()) return;
   if(document.querySelector('[name=_gotcha]').value) return;
   const subject=CONFIG.assuntoPrefixo+" | "+(cur==="inicial"?"Etapa 1":"Etapa 2")+" | "+(d.clinica||d.resp||"Sem identificação");
@@ -408,8 +433,11 @@ $("#form").addEventListener("submit",async e=>{
       const r=await fetch(CONFIG.endpoint,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
         body:JSON.stringify({_subject:subject,_template:"table",etapa:cur,consentimento_lgpd:"sim",respostas:body,...d})});
       if(!r.ok) throw new Error(r.status);
+      
+      localStorage.setItem(LOCK_KEY(cur), "true");
       try{ localStorage.removeItem(KEY(cur)); }catch(e){}
-      result("<b>Diagnóstico enviado com sucesso!</b> Recebemos suas respostas e nossa equipe técnica entrará em contato em breve com a proposta estratégica.",true);
+      
+      checkLock();
     }catch(err){
       result("<b>Não foi possível realizar o envio automático no momento.</b> Por favor, utilize a opção <b>Baixar Cópia em Texto</b> e encaminhe o arquivo gerado para "+esc(CONFIG.emailDestino)+".",false);
     }
